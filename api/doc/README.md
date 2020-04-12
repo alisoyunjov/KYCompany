@@ -249,3 +249,197 @@ $ curl -b cookie.txt -X DELETE
 $ curl -b cookie.txt -X DELETE
        http://localhost:500/api/news
 ```
+
+## Investments API
+
+### Get investments
+
+- description: retrieve the stock tickers tracked by user
+- request: `GET /api/investments/getTickers/:username/`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: list
+    - dictionary of comma-separated tickers: {a,b,c}
+- response: 500
+  - body: no tickers
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/getTickers/ram11/
+```
+---
+
+- description: retrieve the quantity of each stock tracked by user
+- request: `GET /api/investments/getQty/:username/`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: list
+    - dictionary of ticker:quantity : {a:5,b:10,c:1}
+- response: 500
+  - body: no tickers
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/getQty/ram11/
+```
+---
+
+- description: retrieve the buy-at price of each stock tracked by user
+- request: `GET /api/investments/getBuyAt/:username/`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: list
+    - dictionary of ticker:buyatprice : {a:80,b:98,c:70}
+- response: 500
+  - body: no tickers
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/getBuyAt/ram11/
+```
+---
+
+- description: retrieve intraday time series data for a given stock (from Alphavantange API)
+- request: `GET /api/investments/intraday/:ticker/`
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - Time Series (5min) : object
+      - Date & Timeframe - date and timeframe of stock quote : object
+        - 1. open : (string) open price on start of timeframe
+        - 2. high : (string) high price on this timeframe
+        - 3. low : (string) low price on this timeframe
+        - 4. close : (string) close price on end of timeframe
+        - 5. volume : (string) volume traded on timeframe
+- response: 500
+  - body: Alphavantange API error
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/intraday/TWTR/
+```
+---
+
+- description: retrieve daily time series data for a given stock (from Alphavantange API)
+- request: `GET /api/investments/daily/:ticker/`
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - Time Series (Daily) : object
+      - Date - date : object
+        - 1. open : (string) open price on date open
+        - 2. high : (string) high price on day
+        - 3. low : (string) low price on day
+        - 4. close : (string) close price on end of day
+        - 5. volume : (string) volume traded on day
+- response: 500
+  - body: Alphavantange API error
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/daily/TWTR/
+```
+---
+- description: retrieve daily time series data for a multiple stocks (from WTD API)
+- request: `GET /api/investments/daily/batch/:tickers/`
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - data : list
+      - object:
+        - symbol : (string) open price on date open
+        - name : (string) high price on day
+        - currency : (string) low price on day
+        - price: (string) price of stock
+        - price_open: (string) price of stock on open
+        - day_high: (string) daily high price
+        - day_low: (string) daily low price
+        - 52_week_high: (string) 52-week high
+        - 52_week_low: (string) 52-week low
+        - day_change: (string) price change over day
+        - change_pct: (string) percentage change day-over-day
+        - close_yesterday: (string) close price
+        - market_cap: (string) market cap
+        - volume: (string) trading volume on day
+        - volume_avg: (string) average trading volume over week
+        - shares: (string) outstanding shares
+        - stock_exchange_long: (string) stock exchange listed on
+        - pe: (string) profit to expense ratio
+        - eps: (string) earnings per share
+- response: 500
+  - body: WTD API error
+
+```
+$ curl -b tickers.txt -X GET
+    localhost:5000/api/investments/daily/batch/TWTR,SNAP,MMM/
+```
+### Create
+
+- description: add a stock to track for a user
+- request: `POST /api/investments/addticker/:username/:ticker/`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - success: (string) 1 ticker added
+- response: 500
+  - body: Error adding to DB
+
+```
+$ curl -X POST
+       -H "Content-Type: `application/json`"
+       http://localhost:5000/api/investments/addticker/ram11/TWTR/'
+```
+---
+- description: add number of a certain stock to track for a user
+- request: `POST /api/investments/addqty/:username/:ticker/:qty`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - success: (string) ticker quantity added
+- response: 500
+  - body: Error adding qty to DB
+
+```
+$ curl -X POST
+       -H "Content-Type: `application/json`"
+       http://localhost:5000/api/investments/addqty/ram11/TWTR/10'
+```
+---
+
+- description: add buyat price of a certain stock for a user
+- request: `POST /api/investments/addbuyat/:username/:ticker/:price`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - success: (string) ticker buy-at price added
+- response: 500
+  - body: Error adding buyat price to DB
+
+```
+$ curl -X POST
+       -H "Content-Type: `application/json`"
+       http://localhost:5000/api/investments/ram11/addbuyat/TWTR/189'
+```
+---
+
+### DELETE
+- description: remove tracking of a certain stock for a user
+- request: `POST /api/investments/removeticker/:username/:ticker/`
+- session
+- response: 200
+  - content-type: `application/json`
+  - body: object
+    - success: (string) 1 ticker deleted
+- response: 500
+  - body: Error deleting
+
+```
+$ curl -b cookie.txt -X DELETE
+       http://localhost:3003/api/investments/removeticker/testuser/TWTR/
+```

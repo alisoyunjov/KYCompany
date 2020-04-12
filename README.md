@@ -6,6 +6,22 @@
 - --Alan Lee, 1002492965, leealan1
 - --Ubaydullo Rustami, 1006631879, rustamiu
 
+Final Product
+---
+App url: https://www.fintrack.me/ \
+Documentation: [Docs](api/doc/README.md) \
+Video Link: https://youtu.be/CCtHCdwPQXI 
+
+Original Long Video: [here](https://youtu.be/hI1__-X_9s4) \
+Longer video but goes more in detail
+
+Limitation of App:
+---
+- Track up to 4 stocks at a time due to free-tier API limitations
+- App uses two stock APIs due to each having their own free-tier limitations (i.e. one of them allows only 4 requests/minute, 1 stock request per call, etc.)
+- Stock API we use only covers stocks listed on: NYSE, TSX, NIKKEI, HKEX, Euronext Paris (Bourse), SSE, SZSE, +other indices such as ^DJI
+- If stock API is not working, stock data on investments page will instead be pulled from pseudocaching
+
 **Description:**
 
 Our web app is going to be a personal finance tracker, where you can track credit card bills and other expenses. It will be an easy way to keep track of your money and where it&#39;s going. Also, it will help you plan for the future and set aside savings. Additionally, you will be able to keep track of your investments in the stock market and the app will update how much money you made from them or how much you lost.
@@ -27,13 +43,14 @@ Our web app is going to be a personal finance tracker, where you can track credi
 
 **Technologies we will use:**
 
-- --React?
+- --React
 - --Mongodb
 - --Node.js
 - --TypeScript
 - --Google authenticator
 - --APIs:
   - --Stock data: alphavantange api [https://www.alphavantage.co/documentation/](https://www.alphavantage.co/documentation/)
+  - --WorldTradingData
   - --Charting data: tradingview.com
 
 **Technical Challenges:**
