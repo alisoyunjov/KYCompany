@@ -28,6 +28,9 @@ router.post('/', isAuthenticated, applyValidationRules("create expense"), valida
         payment_type: req.body.payment_type,
         description: req.body.description
     };
+    if(req.session.username !== expense.username){
+        return res.status(401).end("access denied");
+    }
     const result = await add_expense(expense);
     if(result) {
         return res.status(200).json(result.ops[0]);
@@ -82,6 +85,9 @@ router.get('/:id', isAuthenticated, async function (req, res) {
 router.get('/multiple/:username', isAuthenticated, applyValidationRules("get expenses"), validate,async function (req, res) {
     console.log('GET path /api/expense/multiple/:username');
     const username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const page_number = parseInt(req.query.page_number);
     const page_limit = parseInt(req.query.page_limit);
     let {start=new Date('01/01/2000'), end=new Date()} = req.query;
@@ -109,6 +115,9 @@ router.get('/multiple/:username', isAuthenticated, applyValidationRules("get exp
 router.get('/multiple-sum/:username', isAuthenticated, applyValidationRules("get expenses sum"), validate,async function (req, res) {
     console.log('GET path /api/expense/multiple-sum/:username');
     const username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const page_number = parseInt(req.query.page_number);
     const page_limit = parseInt(req.query.page_limit);
     let {start=new Date('01/01/2000'), end=new Date()} = req.query;
@@ -136,6 +145,9 @@ router.get('/multiple/:username/:month', isAuthenticated, applyValidationRules("
     const page_number = parseInt(req.query.page_number);
     const page_limit = parseInt(req.query.page_limit);
     const username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const categories = JSON.parse(req.query.categories);
     const payment_types = JSON.parse(req.query.payment_types);
     const types = JSON.parse(req.query.types);
@@ -150,6 +162,9 @@ router.get('/multiple-sum/:username/:month', isAuthenticated, applyValidationRul
     const page_number = parseInt(req.query.page_number);
     const page_limit = parseInt(req.query.page_limit);
     const username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const categories = JSON.parse(req.query.categories);
     const payment_types = JSON.parse(req.query.payment_types);
     const types = JSON.parse(req.query.types);

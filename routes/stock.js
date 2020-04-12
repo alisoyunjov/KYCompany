@@ -50,6 +50,9 @@ app.use(function (req, res, next){
 // fetch qty : dictionary of {ticker: qty}
 app.get("/getQty/:username/", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const client = new MongoClient(uri, { useNewUrlParser: true });
     
     client.connect(function(err) {
@@ -71,6 +74,9 @@ app.get("/getQty/:username/", isAuthenticated, function (req, res) {
 // fetch buyatprice : dictionary of {ticker: buy at price}
 app.get("/getBuyAt/:username/", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const client = new MongoClient(uri, { useNewUrlParser: true });
     
     client.connect(function(err) {
@@ -91,6 +97,9 @@ app.get("/getBuyAt/:username/", isAuthenticated, function (req, res) {
 // fetch all ticker symbols for given user
 app.get("/getTickers/:username/", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     const client = new MongoClient(uri, { useNewUrlParser: true });
     
     client.connect(function(err) {
@@ -137,6 +146,9 @@ app.get("/daily/batch/:tickers/", function (req, res) {
 // add a ticker for a user
 app.post("/addticker/:username/:ticker/", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     let ticker = req.params.ticker;
     const client = new MongoClient(uri, { useNewUrlParser: true });
 
@@ -156,6 +168,9 @@ app.post("/addticker/:username/:ticker/", isAuthenticated, function (req, res) {
 // add ticker qty for a user
 app.post("/addqty/:username/:ticker/:qty", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     let add = {};
     add[req.params.ticker] = req.params.qty;
 
@@ -177,6 +192,9 @@ app.post("/addqty/:username/:ticker/:qty", isAuthenticated, function (req, res) 
 // add ticker buy-at price for a user
 app.post("/addbuyat/:username/:ticker/:price", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     let add = {};
     add[req.params.ticker] = req.params.price;
 
@@ -198,6 +216,9 @@ app.post("/addbuyat/:username/:ticker/:price", isAuthenticated, function (req, r
 // remove a ticker for a user
 app.delete("/removeticker/:username/:ticker/", isAuthenticated, function (req, res) {
     let username = req.params.username;
+    if(req.session.username !== username){
+        return res.status(401).end("access denied");
+    }
     let ticker = req.params.ticker;
     const client = new MongoClient(uri, { useNewUrlParser: true });
 
