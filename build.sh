@@ -1,4 +1,5 @@
 cd /var/www/biobuy
+git pull
 sudo npm install
 cd /var/www/biobuy/fintrack/frontend/
 sudo npm install
