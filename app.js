@@ -50,4 +50,4 @@ app.use(function (req, res) {
 });
 
 
-app.listen(PORT, () => console.log('Start listening on port 5000!'));
+app.listen(PORT, () => console.log('Start listening on port: ' + PORT));
