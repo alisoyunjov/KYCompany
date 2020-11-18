@@ -65,8 +65,17 @@ Our web app is going to be a personal finance tracker, where you can track credi
 
 # Run App on Dev
 
-1. `node app,js` keep this running (backend)
+1. `node app.js` keep this running (backend)
 2. `cd ./fintrank/frondend`
 3. `npm start` keep this running (frontend react)
 
 If build files are already ready then run `npm start` at the root.
+
+# Build and Deploy in AWS
+
+Execute the following commands in EC2 Machine:
+
+1. `cd /var/www/biobuy`
+2. `bash build.sh`
+3. Go to the Public IP address of EC2 Server (Can be found in EC2 Console Dashboard)
+
