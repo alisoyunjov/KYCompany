@@ -100,35 +100,24 @@ router.post(
         hash.update(password);
         let saltedHash = hash.digest("base64");
         password = saltedHash;
-        const token = Math.floor(100000 + Math.random() * 900000);
-        const token_process = await save_token(username, token, email, password, salt);
 
-        if(token_process && (token_process.modifiedCount || token_process.upsertedCount)){
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: 'fintrack.team@gmail.com',
-                    pass: 'cscc09project'
-                }
-            });
+        const result = await add_user(username, email, password, salt);
 
-            const mailOptions = {
-                from: 'fintrack.team@gmail.com',
-                to: `${email}`,
-                subject: 'Your token for Fintrack app',
-                text: `Hi ${username}, \n\n Thank you for signing up to Fintrack. ${token} is your token.\n\n All the best,\nFintrack support`
-            };
-
-            transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                    res.json({'error': error});
-                } else {
-                    res.json({"success": 'Email sent: ' + info.response});
-                }
-            });
-        }else{
-            return res.json({ error: "Internal server error occurred while generating authentication token. Please try again later" });
+        if (result) {
+            req.session.username = username;
+            res.setHeader(
+                "Set-Cookie",
+                cookie.serialize("username", username, {
+                    path: "/",
+                    maxAge: 60 * 60 * 24 * 7
+                })
+            );
+            return res
+                .status(200)
+                .json({ success: "user " + username + " signed up" });
         }
+        return res.status(500).json({ error: "Internal server error" });
+
     }
 );
 

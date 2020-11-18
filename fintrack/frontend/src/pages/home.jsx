@@ -95,10 +95,10 @@ export default function HomePage(props) {
   return (
     <div className={classes.fill}>
       <div className={classes.mainFrame}>
-        <div className={classes.title}>Welcome to FinTrack</div>
+        <div className={classes.title}>Welcome to BioBuy</div>
         <div className={classes.introSection}>
           <div className={classes.header2}>
-            FinTrack is your new one stop app for all your finance tracking
+            BioBuy is your new one stop app for all your Order tracking
             needs.
           </div>
           <div className={classes.header3}>
@@ -107,35 +107,6 @@ export default function HomePage(props) {
               Sign up
             </Link>{" "}
             for an account and get started today
-          </div>
-        </div>
-        <div className={classes.features}>What can FinTrack do for you?</div>
-        <div className={classes.divider} />
-        <div className={classes.flexExpenses}>
-          <div>
-            <div className={classes.subHeading}>Expense Tracking</div>
-          </div>
-          <div className={classes.imgSection}>
-            <img className={classes.img} src={img} alt="Expense Sheet" />
-          </div>
-        </div>
-        <div className={classes.divider} />
-        <div className={classes.flexExpenses}>
-          <div className={classes.imgSection}>
-            <img className={classes.img} src={img2} alt="Investment Charts" />
-          </div>
-
-          <div>
-            <div className={classes.subHeading}>Market Investment Tracking</div>
-          </div>
-        </div>
-        <div className={classes.divider} />
-        <div className={classes.flexExpenses}>
-          <div>
-            <div className={classes.subHeading}>Monitor Financial status</div>
-          </div>
-          <div className={classes.imgSection}>
-            <img className={classes.img} src={img3} alt="Overview" />
           </div>
         </div>
       </div>

@@ -64,41 +64,13 @@ function VerificationCodeModal(props) {
   };
 
   const handleSubmit = () => {
-    if (token === "") {
-      setErrToken(true);
-      return null;
-    } else {
-      axios
-        .post("/api/user/validateToken", {
-          email: email,
-          username: username,
-          password: password,
-          token: token,
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            document.location.href = "/";
-          }
-        })
-        .catch((err) => {
-          setError(err.response.data.error);
-          console.log(err.response);
-        });
-    }
+    document.location.href = "/";
   };
 
   return (
     <div>
       <div className={classes.main}>
-        <Typography
-          className={classes.top}
-          component="h1"
-          variant="h4"
-          color="primary"
-          gutterBottom
-        >
-          Validate Token
-        </Typography>
+
         <div className={classes.info}>
           Token was sent to <b>{email}</b>
         </div>
@@ -165,6 +137,7 @@ class SignupPage extends Component {
       .then((response) => {
         if (response.status === 200) {
           this.setState({ loading: false, openvalidator: true });
+          document.location.href = "/";
         }
       })
       .catch((error) => {
@@ -178,14 +151,7 @@ class SignupPage extends Component {
   }
   render() {
     const { classes } = this.props;
-    let page = this.state.openvalidator ? (
-      <VerificationCodeModal
-        open={this.state.openvalidator}
-        email={this.state.email}
-        username={this.state.username}
-        password={this.state.password}
-      />
-    ) : (
+    let page = (
       <div>
         <Container component="main" maxWidth="xs">
           <CssBaseline />

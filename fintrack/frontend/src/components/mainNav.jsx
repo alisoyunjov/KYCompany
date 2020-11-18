@@ -238,7 +238,7 @@ class NavigationBar extends Component {
             className={classes.title}
           >
             <Link to="/" className="no_text_decor link">
-              FinTrack
+              BioBuy
             </Link>
           </Typography>
           {login_el}

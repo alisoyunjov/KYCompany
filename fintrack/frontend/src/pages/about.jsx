@@ -8,9 +8,8 @@ class AboutPage extends Component {
         <h1>AboutPage</h1>
         <h4>Created by:</h4>
         <div><ul>
-          <li>Alan Lee</li>
           <li>Rustami Ubaydullo</li>
-          <li>Ram Gurram</li>
+          <li>Alshir Soyunjov</li>
           </ul></div>
         <h4>Made Possible by:</h4>
         <div>
