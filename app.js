@@ -45,7 +45,8 @@ app.use('/about', (req, res) => {
 
 // to catch any other path and return 404
 app.use(function (req, res) {
-    res.status(404).send("Sorry can't find that in Fintrack api!");
+    let fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    res.status(404).send("Sorry can't find that in Fintrack api! The URL is: " + fullUrl);
 });
 
 
