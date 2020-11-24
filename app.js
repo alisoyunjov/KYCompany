@@ -7,15 +7,19 @@ let news = require('./routes/news.js');
 const PORT = process.env.PORT || 5000;
 const session = require('express-session');
 
+
+
+
 app.use(session({
     secret: 'please change this secret',
     resave: false,
     saveUninitialized: true,
 }));
 
-app.use(express.static('./fintrack/frontend/build'));
+app.use(express.static('./frontend/build'));
 
 app.use('/api/user', users);
+
 app.use('/api/expense', expenses);
 app.use('/api/investments', stock);
 app.use('/api/news', news);

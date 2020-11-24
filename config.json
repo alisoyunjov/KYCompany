@@ -1,7 +1,7 @@
 {
   "mongo": {
-    "user": "Rustan_C09",
-    "password": "mongodb1"
+    "user": "dbuser",
+    "password": "Rosebud00"
   },
   "api_key": "5dc8511c30db441c823a5382cacb395f"
 }
