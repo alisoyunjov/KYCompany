@@ -9,12 +9,8 @@ const {
   add_user,
   user_signin,
   get_users,
-  find_user_by_username,
-  update_email,
-  update_salary,
-  update_password,
-  save_token,
-    get_token
+  find_user_by_email,
+
 } = require("../dataAccess/usersData");
 
 const {
@@ -38,45 +34,9 @@ router.get("/", async function(req, res) {
 
   res.status(200).send("/api/user/ in users controller");
 });
+
+
 //Signup
-// router.post(
-//   "/signup",
-//   applyValidationRules("/signup"),
-//   validate,
-//   async function(req, res) {
-//     console.log("path /api/user/signup/");
-//     let username = req.body.username;
-//     let password = req.body.password;
-//     let email = req.body.email;
-//     const exists = await find_user_by_username(username);
-//     if (exists) {
-//       return res
-//         .status(409)
-//         .json({ error: "User with this username already exists" });
-//     }
-//     let salt = crypto.randomBytes(16).toString("base64");
-//     let hash = crypto.createHmac("sha512", salt);
-//     hash.update(password);
-//     let saltedHash = hash.digest("base64");
-//     password = saltedHash;
-//     const user = await add_user(username, email, password, salt);
-//
-//     if (user) {
-//       req.session.username = username;
-//       res.setHeader(
-//         "Set-Cookie",
-//         cookie.serialize("username", username, {
-//           path: "/",
-//           maxAge: 60 * 60 * 24 * 7
-//         })
-//       );
-//       return res
-//         .status(200)
-//         .json({ success: "user " + username + " signed up" });
-//     }
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
-// );
 
 router.post(
     "/signup",
@@ -84,16 +44,17 @@ router.post(
     validate,
     async function(req, res) {
         console.log("path /api/user/signup/");
-        let username = req.body.username;
+        let name = req.body.name;
+        let surname = req.body.surname;
+        let role = req.body.role;
         let password = req.body.password;
         let email = req.body.email;
-        const exists_in_user_db = await find_user_by_username(username);
-        const exists_in_token_db = await get_token(username);
+        const exists_in_user_db = await find_user_by_email(email);
 
-        if (exists_in_user_db || exists_in_token_db) {
+        if (exists_in_user_db) {
             return res
                 .status(409)
-                .json({ error: "User with this username already exists" });
+                .json({ error: "User with this email already exists" });
         }
         let salt = crypto.randomBytes(16).toString("base64");
         let hash = crypto.createHmac("sha512", salt);
@@ -101,69 +62,23 @@ router.post(
         let saltedHash = hash.digest("base64");
         password = saltedHash;
 
-        const result = await add_user(username, email, password, salt);
+        const result = await add_user(name, surname, email, role, password, salt);
 
         if (result) {
-            req.session.username = username;
+            req.session.username = email;
             res.setHeader(
                 "Set-Cookie",
-                cookie.serialize("username", username, {
+                cookie.serialize("username", email, {
                     path: "/",
                     maxAge: 60 * 60 * 24 * 7
                 })
             );
             return res
                 .status(200)
-                .json({ success: "user " + username + " signed up" });
+                .json({ success: "user with email: " + email + " signed up" });
         }
         return res.status(500).json({ error: "Internal server error" });
 
-    }
-);
-
-router.post(
-    "/validateToken",
-    applyValidationRules("/signin"),
-    validate,
-    async function(req, res) {
-        console.log("path /api/user/signin/");
-        var username = req.body.username;
-        var password = req.body.password;
-        const token = req.body.token;
-        // retrieve user from the database
-        const user = await get_token(username);
-        if (!user) {
-            return res
-                .status(409)
-                .json({ error: "User with this username does not exist" });
-        }
-        let salt = user.salt;
-        var hash = crypto.createHmac("sha512", salt);
-        hash.update(password);
-        var saltedHash = hash.digest("base64");
-        password = saltedHash;
-        console.log(password, salt);
-
-        if (user.password !== password || user.token !== parseInt(token))
-            return res.status(401).json({ error: "access denied" });
-        // initialize cookie
-
-        const result = await add_user(user.username, user.email, user.password, user.salt);
-
-    if (result) {
-      req.session.username = username;
-      res.setHeader(
-        "Set-Cookie",
-        cookie.serialize("username", username, {
-          path: "/",
-          maxAge: 60 * 60 * 24 * 7
-        })
-      );
-      return res
-        .status(200)
-        .json({ success: "user " + username + " signed up" });
-    }
-        return res.status(500).json({ error: "Internal server error" });
     }
 );
 
@@ -175,11 +90,10 @@ router.post(
     validate,
     async function(req, res) {
         console.log("path /api/user/signin/");
-        var username = req.body.username;
+        var email = req.body.email;
         var password = req.body.password;
-        const token = req.body.token;
         // retrieve user from the database
-        const user = await find_user_by_username(username);
+        const user = await find_user_by_email(email);
         if (!user) {
             return res
                 .status(409)
@@ -191,6 +105,7 @@ router.post(
         var saltedHash = hash.digest("base64");
         password = saltedHash;
         console.log(password, salt);
+        console.log(user.password);
 
 
         if (user.password !== password)
@@ -198,14 +113,14 @@ router.post(
         // initialize cookie
         res.setHeader(
             "Set-Cookie",
-            cookie.serialize("username", username, {
+            cookie.serialize("username", email, {
                 path: "/",
                 maxAge: 60 * 60 * 24 * 7
             })
         );
         //session
-        req.session.username = username;
-        return res.json({ success: "user " + username + " signed in" });
+        req.session.username = email;
+        return res.json({ success: "user " + email + " signed in" });
     }
 );
 
@@ -227,27 +142,7 @@ router.post("/signout", function(req, res) {
   );
   res.status(200).json({ success: "Signed out" });
 });
-//update Salary of a user
-router.patch(
-  "/profile/salary", isAuthenticated,
-  applyValidationRules("/profile/salary"),
-  validate,
-  async function(req, res) {
-    console.log("path /api/user/profile/salary");
-    const salary = parseInt(req.body.salary);
-    const result = await update_salary(req.body.username, salary);
-    if (result && result.modifiedCount) {
-      return res
-        .status(200)
-        .json({
-          success: `Updated the salary of the user ${req.body.username}`
-        });
-    }
-    return res.status(404).json({
-      error: "User with the given username not found or the salary is the same"
-    });
-  }
-);
+
 //Update email of a user
 router.patch(
   "/profile/email", isAuthenticated,
@@ -310,14 +205,14 @@ router.patch("/profile/password",
 
 //get user info by username
 
-router.get('/info/:username', isAuthenticated, async function(req, res){
-    let result = await find_user_by_username(req.params.username);
+router.get('/info/:user_email', async function(req, res){
+    let result = await find_user_by_email(req.params.user_email);
     if(result){
         delete result._id; delete result.password; delete result.salt; delete result.tickers;
         return res.status(200).json(result);
     }
     return res.status(404).json({
-        error: "User with the given username not found."
+        error: "User with the given email not found."
     });
 });
 
